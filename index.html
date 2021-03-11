@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,inital-scale=1">
+        <title>lastMan</title>
+    </head>
+    <style>
+        *{
+    margin:0;
+    padding:0;
+}
+body{
+    background-color: red;
+    overflow: hidden;
+}
+.gameContainer{
+   background-image: url(hero\ \(2\).png);
+   background-repeat: no-repeat;
+   background-size: 100vw 100vh;
+   width: 100%;
+   height: 100vh;
+}
+.hero{
+    background-image: url(hero\ \(1\).png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 240px;
+    height: 210px;
+    position: absolute;
+    bottom: 0; 
+}
+.obstacle{
+    width: 177px;
+    height: 177px;
+    background-image: url(bowsers.png);
+    background-size: cover;
+    position: absolute;
+    bottom: 0;
+    left: 44vw;
+}
+.animatehero{
+    animation: hero 0.9s linear;
+}
+@keyframes hero {
+    0%{
+      bottom: 0;
+    }
+    50%{
+       bottom: 400px;
+    }
+    100%{
+      bottom: 0;    
+    }  
+}
+    @keyframes obstacleAni{
+      0%{
+          left:100vw;
+      }       
+      100%{
+          left:-10vw;  
+    }
+    }
+  
+    .obstacleAni{
+        animation: obstacleAni 5s linear infinite;
+    } 
+    .gameOver{
+        position: relative;
+        top: 63px;
+        visibility: hidden;
+        font-size: 70px;
+        text-align: center;
+        color: blueviolet;
+    } 
+    </style>
+    <script>
+        cross =true;
+       document.onkeydown=function(e){
+           console.log("this key is",e.keyCode)
+           if(e.keyCode==38){
+               hero = document.querySelector('.hero');
+               hero.classList.add('animatehero');
+               setTimeout(()=>{
+                   hero.classList.remove('animatehero');
+               },700);
+           }
+           if(e.keyCode==39){
+               hero = document.querySelector('.hero');
+               herox = parseInt(window.getComputedStyle(hero,null).getPropertyValue('left'));
+               hero.style.left=herox +112 + "px";
+           }
+           if(e.keyCode==37){
+               hero = document.querySelector('.hero');
+               herox = parseInt(window.getComputedStyle(hero,null).getPropertyValue('left'));
+               hero.style.left=(herox - 112)+"px";
+           }
+       }
+       setInterval(()=>{
+           hero = document.querySelector('.hero');
+           gameOver=document.querySelector('.gameOver');
+           obstacle= document.querySelector('.obstacle');
+          dx =parseInt(window.getComputedStyle(hero,null).getPropertyValue('left')); 
+          dy = parseInt(window.getComputedStyle(hero,null).getPropertyValue('top')); 
+          ox = parseInt(window.getComputedStyle(obstacle,null).getPropertyValue('left')); 
+          oy = parseInt(window.getComputedStyle(obstacle,null).getPropertyValue('top')); 
+          offsetX = Math.abs(dx-ox);
+          offsetY= Math.abs(dy-oy);
+          if(offsetX< 93 && offsetY< 52){
+              gameOver.style.visibility = 'visible';
+              obstacle.classList.remove('obstacleAni');
+          }
+          else if (offsetX<120 && cross){
+              score+=1;
+              updateScore(score);
+              cross=false;
+              setTimeout(()=>{
+                  cross =true;
+              },1000);
+              aniDur= ox = parseFloat(window.getComputedStyle(obstacle,null).getPropertyValue('animation-duration'));
+              newDur = aniDur - 0.4;
+              obstacle.style.animationDuration = newDur + 's';
+            }
+       },10);
+       
+       
+    
+    </script>
+    <body>
+        <div class="gameContainer">
+        <div class="gameOver">Game Over</div>
+        <div class="hero"></div>
+        <div class="obstacle obstacleAni"></div>
+        </div>
+    </body>
+</html> 
